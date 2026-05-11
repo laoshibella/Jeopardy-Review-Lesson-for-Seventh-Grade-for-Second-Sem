@@ -1,45 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<title>Grade 7 Jeopardy Interactive</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 7 Jeopardy Game</title>
 <style>
-body{margin:0;background:#111;color:white;font-family:Arial;text-align:center}
-#board{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:20px}
-.cell{background:#1d4ed8;padding:25px;font-size:24px;border-radius:12px;cursor:pointer}
-.cell:hover{background:#2563eb}
-#viewer{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;justify-content:center;align-items:center;flex-direction:column}
-img{max-width:90%;max-height:80vh;border-radius:15px}
-button{margin-top:20px;padding:15px 30px;font-size:20px;border:none;border-radius:10px;cursor:pointer}
+body{font-family:Arial,sans-serif;background:#0b1c4d;color:white;text-align:center;margin:0;padding:20px}
+h1{margin-bottom:20px}
+#board{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;max-width:1200px;margin:auto}
+.category,.cell{padding:20px;border-radius:10px}
+.category{background:#1e3a8a;font-weight:bold}
+.cell{background:#2563eb;cursor:pointer;font-size:24px}
+.cell:hover{background:#3b82f6}
+#modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);justify-content:center;align-items:center}
+#content{background:white;color:black;padding:30px;border-radius:20px;max-width:700px}
+button{padding:10px 20px;margin:10px;font-size:18px}
 </style>
 </head>
 <body>
 <h1>Grade 7 Jeopardy Game</h1>
-<div style='margin:20px;'>Set Timer: <input id='setTime' type='number' value='60' min='5' style='padding:8px;font-size:18px;width:80px;'> seconds</div>
-<div id='board'></div>
-<div id='viewer'>
-<div id='timer' style='font-size:40px;margin-bottom:20px;'>60</div>
-<img id='slide'>
-<button onclick='closeSlide()'>Back to Board</button>
+<div id="board"></div>
+<div id="modal">
+<div id="content">
+<h2 id="question"></h2>
+<p id="answer" style="display:none"></p>
+<button onclick="reveal()">Reveal Answer</button>
+<button onclick="closeModal()">Back to Game Board</button>
+</div>
 </div>
 <script>
-const totalSlides=65;
+const data={
+"Places":{"10":["What is the name of this place?","Restaurant"],"20":["What is the name of this place?","Museum"],"30":["You've been bombed!","Lose all points"],"40":["What is the name of this place?","Post Office"],"50":["What is the name of this place?","Pharmacy / Drugstore"]},
+"Weekend":{"10":["What weekend activity is it?","Go out with friends"],"20":["What weekend activity is it?","Do sports"],"30":["Bomb!","Lose all points"],"40":["What weekend activity is it?","Do nothing"],"50":["Give two examples each of lazy and active weekend activities.","Teacher checks answer"]},
+"Chores":{"10":["English name of this school chore?","Tidy up the cabinets"],"20":["Bomb!","Lose all points"],"30":["English name?","Mop the floor"],"40":["How often does Olivia sweep the floor?","Once a week"],"50":["What school duty does this class do?","Clean whiteboard, sweep floor, arrange tables/chairs"]},
+"Holidays":{"10":["When do people celebrate Christmas?","December 25th"],"20":["Holiday with turkey?","Thanksgiving"],"30":["When do you go trick-or-treating?","Halloween"],"40":["Bomb!","Lose all points"],"50":["Holiday on second Sunday of May?","Mother's Day"]},
+"Months":{"10":["8th month?","August"],"20":["2nd month?","February"],"30":["What season is December?","Winter"],"40":["He feels...?","Shy"],"50":["List all 12 months","Teacher checks"]},
+"English":{"10":["How many letters?","26"],"20":["Vowel letters?","A E I O U"],"30":["Common letter?","E"],"40":["Most common letter?","E"],"50":["Who are the English teachers?","Bella, Few, Ivy, Guoming, Stone, Susan, Kate"]}
+};
 const board=document.getElementById('board');
-for(let i=1;i<=totalSlides;i++){
- let d=document.createElement('div');
- d.className='cell';
- d.innerText=i;
- d.onclick=()=>openSlide(i);
- board.appendChild(d);
-}
-let countdown;
-function openSlide(n){
- document.getElementById('slide').src='game_assets/'+n+'.png';
- document.getElementById('viewer').style.display='flex';
-let time=parseInt(document.getElementById('setTime').value)||60;document.getElementById('timer').innerText=time;clearInterval(countdown);countdown=setInterval(()=>{time--;document.getElementById('timer').innerText=time;if(time<=0){clearInterval(countdown);alert('Time is up!');}},1000);
-}
-function closeSlide(){clearInterval(countdown);document.getElementById('viewer').style.display='none';}
+for(let cat in data){let c=document.createElement('div');c.className='category';c.textContent=cat;board.appendChild(c)}
+for(let pts of ['10','20','30','40','50']){for(let cat in data){let d=document.createElement('div');d.className='cell';d.textContent=pts;d.onclick=()=>openQ(cat,pts,d);board.appendChild(d)}}
+let current;
+function openQ(cat,pts,cell){current=cell;document.getElementById('question').textContent=data[cat][pts][0];document.getElementById('answer').textContent=data[cat][pts][1];document.getElementById('answer').style.display='none';document.getElementById('modal').style.display='flex'}
+function reveal(){document.getElementById('answer').style.display='block'}
+function closeModal(){document.getElementById('modal').style.display='none';if(current){current.style.visibility='hidden'}}
 </script>
 </body>
 </html>
