@@ -16,6 +16,7 @@ button{margin-top:20px;padding:15px 30px;font-size:20px;border:none;border-radiu
 </head>
 <body>
 <h1>Grade 7 Jeopardy Game</h1>
+<div style='margin:20px;'>Set Timer: <input id='setTime' type='number' value='60' min='5' style='padding:8px;font-size:18px;width:80px;'> seconds</div>
 <div id='board'></div>
 <div id='viewer'>
 <div id='timer' style='font-size:40px;margin-bottom:20px;'>60</div>
@@ -36,7 +37,7 @@ let countdown;
 function openSlide(n){
  document.getElementById('slide').src='game_assets/'+n+'.png';
  document.getElementById('viewer').style.display='flex';
-let time=60;document.getElementById('timer').innerText=time;clearInterval(countdown);countdown=setInterval(()=>{time--;document.getElementById('timer').innerText=time;if(time<=0){clearInterval(countdown);alert('Time is up!');}},1000);
+let time=parseInt(document.getElementById('setTime').value)||60;document.getElementById('timer').innerText=time;clearInterval(countdown);countdown=setInterval(()=>{time--;document.getElementById('timer').innerText=time;if(time<=0){clearInterval(countdown);alert('Time is up!');}},1000);
 }
 function closeSlide(){clearInterval(countdown);document.getElementById('viewer').style.display='none';}
 </script>
