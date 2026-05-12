@@ -1,47 +1,18 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<title>Grade 7 Jeopardy</title>
-<style>
-body{margin:0;background:#061539;color:white;font-family:Arial;text-align:center}
-h1{margin:20px}
-#board{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:20px;max-width:1400px;margin:auto}
-.category{background:#102c7a;padding:20px;font-weight:bold;font-size:20px}
-.cell{background:#1d4ed8;padding:30px;font-size:28px;cursor:pointer}
-.cell:hover{background:#2563eb}
-#viewer{display:none;position:fixed;inset:0;background:black;justify-content:center;align-items:center;flex-direction:column}
-img{max-width:92%;max-height:80vh}
-button,input{padding:10px;font-size:18px}
-</style>
-</head>
-<body>
+<head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>Grade 7 Jeopardy</title><style>body{margin:0;background:#061539;color:white;font-family:Arial;text-align:center}h1{margin:20px}#preview img{width:30%;margin:10px;border-radius:10px}#board{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:20px;max-width:1400px;margin:auto}.category{background:#102c7a;padding:20px;font-weight:bold}.cell{background:#1d4ed8;padding:30px;font-size:28px;cursor:pointer}.cell:hover{background:#2563eb}#viewer{display:none;position:fixed;inset:0;background:black;justify-content:center;align-items:center;flex-direction:column}img.slide{max-width:92%;max-height:75vh;display:none}button,input{padding:10px;font-size:18px;margin:10px}</style></head><body>
 <h1>Grade 7 Jeopardy Game</h1>
+<div id='preview'><h2>How to Play Preview</h2><img src='game_assets/1.png'><img src='game_assets/2.png'><img src='game_assets/3.png'></div>
 <div>Timer: <input id='setTime' type='number' value='60'></div>
 <div id='board'></div>
-<div id='viewer'>
-<div id='timer' style='font-size:42px'></div>
-<img id='slide'>
-<button onclick='closeSlide()'>Back to Game Board</button>
-</div>
+<div id='viewer'><div id='timer' style='font-size:42px'></div><img class='slide' id='questionSlide'><img class='slide' id='answerSlide'><div><button onclick='revealAnswer()'>Reveal Answer</button><button onclick='closeSlide()'>Back to Game Board</button></div></div>
 <script>
-const categories=['Places','Weekend Activity','School Chores','Holidays','Months & Seasons','English'];
-const points=[10,20,30,40,50];
-const slideMap={
-'Places':[1,2,3,4,5],
-'Weekend Activity':[6,7,8,9,10],
-'School Chores':[11,12,13,14,15],
-'Holidays':[16,17,18,19,20],
-'Months & Seasons':[21,22,23,24,25],
-'English':[26,27,28,29,30]
-};
-const board=document.getElementById('board');
-let currentCell,countdown;
+const categories=['Places','Weekend Activity','School Chores','Holidays','Months & Seasons','English'];const points=[10,20,30,40,50];
+const slideMap={'Places':[[4,5],[6,7],[8,9],[10,11],[12,13]],'Weekend Activity':[[14,15],[16,17],[18,19],[20,21],[22,23]],'School Chores':[[24,25],[26,27],[28,29],[30,31],[32,33]],'Holidays':[[34,35],[36,37],[38,39],[40,41],[42,43]],'Months & Seasons':[[44,45],[46,47],[48,49],[50,51],[52,53]],'English':[[54,55],[56,57],[58,59],[60,61],[62,63]]};
+const board=document.getElementById('board');let currentCell,countdown;
 categories.forEach(c=>{let d=document.createElement('div');d.className='category';d.innerText=c;board.appendChild(d)});
-points.forEach((p,row)=>{categories.forEach(cat=>{let d=document.createElement('div');d.className='cell';d.innerText=p;d.onclick=()=>openSlide(slideMap[cat][row],d);board.appendChild(d);})});
-function openSlide(n,cell){currentCell=cell;slide.src='game_assets/'+n+'.png';viewer.style.display='flex';let t=parseInt(setTime.value)||60;timer.innerText=t;clearInterval(countdown);countdown=setInterval(()=>{t--;timer.innerText=t;if(t<=0){clearInterval(countdown);alert('Time is up!')}},1000)}
+points.forEach((p,row)=>{categories.forEach(cat=>{let d=document.createElement('div');d.className='cell';d.innerText=p;d.onclick=()=>openSlides(slideMap[cat][row],d);board.appendChild(d)})});
+function openSlides(pair,cell){currentCell=cell;questionSlide.src='game_assets/'+pair[0]+'.png';answerSlide.src='game_assets/'+pair[1]+'.png';questionSlide.style.display='block';answerSlide.style.display='none';viewer.style.display='flex';let t=parseInt(setTime.value)||60;timer.innerText=t;clearInterval(countdown);countdown=setInterval(()=>{t--;timer.innerText=t;if(t<=0){clearInterval(countdown);alert('Time is up!')}},1000)}
+function revealAnswer(){questionSlide.style.display='none';answerSlide.style.display='block'}
 function closeSlide(){clearInterval(countdown);viewer.style.display='none';if(currentCell)currentCell.style.visibility='hidden'}
-</script>
-</body>
-</html>
+</script></body></html>
