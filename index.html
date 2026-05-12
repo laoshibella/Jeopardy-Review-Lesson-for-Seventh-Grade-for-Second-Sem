@@ -26,20 +26,46 @@ button{margin-top:20px;padding:15px 30px;font-size:20px;border:none;border-radiu
 <script>
 const totalSlides=65;
 const board=document.getElementById('board');
+let currentCell;
+let countdown;
+
 for(let i=1;i<=totalSlides;i++){
  let d=document.createElement('div');
  d.className='cell';
  d.innerText=i;
- d.onclick=()=>openSlide(i);
+ d.onclick=()=>openSlide(i,d);
  board.appendChild(d);
 }
-let countdown;
-function openSlide(n){
+
+function openSlide(n,cell){
+ currentCell=cell;
  document.getElementById('slide').src='game_assets/'+n+'.png';
  document.getElementById('viewer').style.display='flex';
-let time=parseInt(document.getElementById('setTime').value)||60;document.getElementById('timer').innerText=time;clearInterval(countdown);countdown=setInterval(()=>{time--;document.getElementById('timer').innerText=time;if(time<=0){clearInterval(countdown);alert('Time is up!');}},1000);
+
+ let time=parseInt(document.getElementById('setTime').value)||60;
+ document.getElementById('timer').innerText=time;
+
+ clearInterval(countdown);
+
+ countdown=setInterval(()=>{
+   time--;
+   document.getElementById('timer').innerText=time;
+
+   if(time<=0){
+      clearInterval(countdown);
+      alert('Time is up!');
+   }
+ },1000);
 }
-function closeSlide(){clearInterval(countdown);document.getElementById('viewer').style.display='none';}
+
+function closeSlide(){
+ clearInterval(countdown);
+ document.getElementById('viewer').style.display='none';
+
+ if(currentCell){
+   currentCell.style.visibility='hidden';
+ }
+}
 </script>
 </body>
 </html>
