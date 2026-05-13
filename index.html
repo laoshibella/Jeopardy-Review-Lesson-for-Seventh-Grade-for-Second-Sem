@@ -19,8 +19,8 @@ button,input{padding:10px;font-size:18px;margin:10px;border:none;border-radius:8
 </head>
 <body>
 <h1>Grade 7 Jeopardy Game</h1>
-<button onclick="openInstructions()">Open Instructions</button>
-<div>Timer: <input id="setTime" type="number" value="60"></div>
+<button onclick="openInstructions()">Open Instructions</button><button onclick="toggleFullscreen()">Fullscreen</button>
+<div>Timer: <input id="setTime" type="number" value="60" oninput="updateLiveTimer()"></div>
 <div id="board"></div>
 <div id="instructionViewer"><img id="instructionSlide" class="slide"><div><button onclick="prevInstruction()">Previous</button><button onclick="nextInstruction()">Next</button><button onclick="closeInstructions()">Close</button></div></div>
 <div id="viewer"><div id="timer" style="font-size:42px"></div><img id="questionSlide" class="slide"><img id="answerSlide" class="slide" style="display:none"><div><button onclick="revealAnswer()">Reveal Answer</button><button onclick="closeSlide()">Back</button></div></div>
@@ -40,6 +40,8 @@ categories.forEach(cat=>{let d=document.createElement('div');d.className='catego
 points.forEach((p,row)=>categories.forEach(cat=>{let d=document.createElement('div');d.className='cell '+classMap[cat];d.innerText=p;d.onclick=()=>openSlides(slideMap[cat][row],d);board.appendChild(d)}));
 function openSlides(pair,cell){currentCell=cell;questionSlide.src='game_assets/'+pair[0]+'.png';answerSlide.src='game_assets/'+pair[1]+'.png';questionSlide.style.display='block';answerSlide.style.display='none';viewer.style.display='flex';let t=parseInt(setTime.value)||60;timer.innerText=t;clearInterval(countdown);countdown=setInterval(()=>{t--;timer.innerText=t;if(t<=10&&t>0)beep();if(t<=0){clearInterval(countdown);alert('Time is up!')}},1000)}
 function revealAnswer(){questionSlide.style.display='none';answerSlide.style.display='block'}
+function updateLiveTimer(){if(viewer.style.display==='flex'){timer.innerText=setTime.value}}
+function toggleFullscreen(){if(!document.fullscreenElement){document.documentElement.requestFullscreen()}else{document.exitFullscreen()}}
 function closeSlide(){clearInterval(countdown);viewer.style.display='none';if(currentCell)currentCell.style.visibility='hidden'}
 </script>
 </body>
